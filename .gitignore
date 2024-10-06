@@ -1,0 +1,17 @@
+# .gitignore
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.$py.class
+
+# Ignore virtual environment folders
+env/
+venv/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore .env file containing environment variables
+.env

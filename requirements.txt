@@ -1,0 +1,8 @@
+python-telegram-bot[ext]>=20.0
+aiohttp
+beautifulsoup4
+apscheduler
+ics
+dateparser
+python-dotenv
+fpdf
