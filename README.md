@@ -1,4 +1,4 @@
-# Bot de Notificaciones de Publicaciones
+# Bot de notificaciones de bienes y servicios
 
 Este bot de Telegram notifica a los usuarios sobre nuevas publicaciones en [sistemas.undc.edu.pe/bienesyservicios](https://sistemas.undc.edu.pe/bienesyservicios/). Los usuarios pueden suscribirse para recibir notificaciones automáticas, descargar archivos PDF asociados, agregar eventos a sus calendarios y más.
 
