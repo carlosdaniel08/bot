@@ -117,14 +117,25 @@ def filter_vigente(data):
     return vigente_data
 
 # Función para formatear una publicación individual
+from datetime import datetime
+
 def format_single_publication(row):
     pdf_url = row[6] if row[6] != "No disponible" else "No disponible"
-    published_date = dateparser.parse(row[3], settings={'DATE_ORDER': 'DMY'})
-    expires_date = dateparser.parse(row[4], settings={'DATE_ORDER': 'DMY'})
-    if expires_date:
-        delta = expires_date - datetime.now()
+    
+    # Intentar convertir las fechas de publicación y vencimiento a objetos datetime
+    try:
+        published_date = datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S')
+        expires_date = datetime.strptime(row[4], '%Y-%m-%d %H:%M:%S')
+    except ValueError as e:
+        logger.error(f"Error al convertir las fechas: {e}")
+        published_date = None
+        expires_date = None
+
+    if published_date and expires_date:
+        # Restar la fecha de vencimiento menos la fecha de publicación
+        delta = expires_date - published_date
         if delta.total_seconds() < 0:
-            delta = timedelta(0)
+            delta = timedelta(0)  # Si ya expiró, el tiempo disponible es 0
         days = delta.days
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, _ = divmod(remainder, 60)
@@ -132,30 +143,38 @@ def format_single_publication(row):
     else:
         available_time = "Desconocido"
 
+    # Crear el mensaje
     message = (
         f"📢 <b>Publicación #{row[0]}</b>\n"
         f"📝 <b>Descripción:</b>\n{row[1]}\n\n"
     )
+    
+    # Añadir el enlace al PDF (si está disponible)
     if pdf_url != "No disponible":
         message += "📄 <b>PDF:</b> Disponible para descargar\n"
     else:
         message += "📄 <b>PDF:</b> No disponible\n"
+    
     message += (
         f"📅 <b>Publicado:</b> {row[3]}\n"
         f"⏳ <b>Vence:</b> {row[4]}\n"
         f"⏱ <b>Tiempo disponible:</b> {available_time}\n"
         f"🗑 <b>Estado:</b> {row[5]}\n"
-
     )
 
     # Botones interactivos
     buttons = []
     if pdf_url != "No disponible":
         buttons.append(InlineKeyboardButton("PDF Original", callback_data=f"download_{row[0]}"))
-    buttons.append(InlineKeyboardButton("PDF de la Publicación", callback_data=f"sharepdf_{row[0]}"))
-    buttons.append(InlineKeyboardButton("Agregar al Calendario", callback_data=f"calendar_{row[0]}"))
+    buttons.append(InlineKeyboardButton("PDF de la publicación", callback_data=f"sharepdf_{row[0]}"))
+    buttons.append(InlineKeyboardButton("Agregar al calendario", callback_data=f"calendar_{row[0]}"))
+    
+    # Crear el markup con los botones
     reply_markup = InlineKeyboardMarkup([buttons])
+    
     return message, reply_markup
+
+
 
 # Handlers de comandos y mensajes
 
