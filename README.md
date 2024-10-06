@@ -23,8 +23,3 @@ Este bot de Telegram notifica a los usuarios sobre nuevas publicaciones en [sist
    git clone https://github.com/tu_usuario/tu_repositorio.git
 
 
----
-
-Ahora, deberías tener todo lo necesario para subir tu proyecto a GitHub. Asegúrate de seguir los pasos para inicializar el repositorio, hacer commit de los archivos y subirlos al repositorio remoto.
-
-Si tienes alguna otra pregunta o necesitas más ayuda, ¡no dudes en consultarme!
